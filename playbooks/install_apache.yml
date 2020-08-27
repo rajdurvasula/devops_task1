@@ -1,0 +1,24 @@
+---
+# Playbook to install, configure apache httpd
+#
+
+- name: Playbook to install, configure apache httpd
+  hosts: all
+  become: true
+
+  vars_files:
+    - vars/main.yml
+
+  tasks:
+    - name: Install Apache HTTPD package
+      package:
+        name: "{{ packages }}"
+        state: present
+
+    - name: Start HTTPD service
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+        daemon_reload: yes
+      loop: "{{ services }}"
