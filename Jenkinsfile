@@ -1,13 +1,6 @@
 
 String aws_creds = 'rd_ibm_aws'
 
-pipeline {
-  agent any
-  environment {
-    TF_VAR_aws_access_key="$(AWS_ACCESS_KEY_ID)"
-    TF_VAR_aws_secret_key="$(AWS_SECRET_ACCESS_KEY)"
-    TF_VAR_region="ap-southeast-1"
-  }
   stages {
     stage("get_code") {
       node("config_node") {
@@ -66,4 +59,3 @@ pipeline {
       }
     }
   }
-}
