@@ -1,3 +1,6 @@
+
+String aws_creds = 'rd_ibm_aws'
+
 pipeline {
   agent any
   environment {
@@ -14,23 +17,51 @@ pipeline {
     }
     stage("initialize") {
       node("config_node") {
-        sh 'terraform init'
+        withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: aws_creds,
+          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+          sh 'terraform init'
+        }
       }
     }
     stage("prepare") {
       node("config_node") {
-        sh 'terraform plan'
+        withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: aws_creds,
+          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+          sh 'terraform plan'
+        }
       }
     }
     if (env.BRANCH_NAME == 'jenkins-pr1') {
       stage('apply') {
         node("config_node") {
-          sh 'terraform apply -auto-approve'
+          withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: aws_creds,
+            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+          ]]) {
+            sh 'terraform apply -auto-approve'
+          }
         }
       }
       stage('status') {
         node("config_node") {
-          sh 'terraform show'
+          withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: aws_creds,
+            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+          ]]) {
+            sh 'terraform show'
+          }
         }
       }
     }
