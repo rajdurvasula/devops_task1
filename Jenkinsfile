@@ -1,8 +1,8 @@
 pipeline {
   agent any
   environment {
-    TF_VAR_aws_access_key="$(access-key)"
-    TF_VAR_aws_secret_key="$(secret-key)"
+    TF_VAR_aws_access_key="$(AWS_ACCESS_KEY_ID)"
+    TF_VAR_aws_secret_key="$(AWS_SECRET_ACCESS_KEY)"
     TF_VAR_region="ap-southeast-1"
   }
   stages {
