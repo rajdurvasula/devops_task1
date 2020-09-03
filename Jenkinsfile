@@ -7,29 +7,29 @@ pipeline {
   }
   stages {
     stage("get_code") {
-      node {
+      node("config_node") {
         cleanWs()
         checkout scm
       }
     }
     stage("initialize") {
-      node {
+      node("config_node") {
         sh 'terraform init'
       }
     }
     stage("prepare") {
-      node {
+      node("config_node") {
         sh 'terraform plan'
       }
     }
-    if (env.BRANCH_NAME == 'master') {
+    if (env.BRANCH_NAME == 'jenkins-pr1') {
       stage('apply') {
-        node {
+        node("config_node") {
           sh 'terraform apply -auto-approve'
         }
       }
       stage('status') {
-        node {
+        node("config_node") {
           sh 'terraform show'
         }
       }
