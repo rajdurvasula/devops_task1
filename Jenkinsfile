@@ -9,9 +9,9 @@ pipeline {
   }
 
   parameters {
-    string(name: playbook_name, defaultValue: 'install_apache', description: 'Which Playbook should I execute ?')
+    choice choices: ['install_apache', 'test_apache'], description: 'Select a playbook to execute', name: 'playbook_name'
   }
-
+  
   stages {
     stage("get_code") {
       steps {
