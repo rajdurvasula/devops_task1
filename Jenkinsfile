@@ -6,9 +6,11 @@ pipeline {
 
   agent none
 
+/*
   parameters {
     choice choices: ['install_apache', 'test_apache'], description: 'Select a playbook to execute', name: 'playbook_name'
   }
+*/
 
   stages {
     stage("get_code") {
