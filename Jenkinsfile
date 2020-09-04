@@ -1,21 +1,26 @@
 
+def aws_creds = 'rd_ibm_aws'
+def ssh_key = 'rd_ssh_key'
+
 pipeline {
-  String aws_creds = 'rd_ibm_aws'
-  String ssh_key = 'rd_ssh_key'
+
+  agent {
+    label 'config_node'
+  }
 
   parameters {
-    playbook_name: 'install_apache'
+    string(Name: playbook_name, defaultValue: 'install_apache', description: 'Which Playbook should I execute ?')
   }
 
   stages {
     stage("get_code") {
-      node("config_node") {
+      steps {
         cleanWs()
         checkout scm
       }
     }
     stage("initialize") {
-      node("config_node") {
+      steps {
         withCredentials([[
           $class: 'AmazonWebServicesCredentialsBinding',
           credentialsId: aws_creds,
@@ -27,7 +32,7 @@ pipeline {
       }
     }
     stage("prepare") {
-      node("config_node") {
+      steps {
         withCredentials([[
           credentialsId: 'rd_ssh_key',
           keyFileVariable: 'SSH_KEY'
@@ -46,7 +51,7 @@ pipeline {
     }
     if (env.BRANCH_NAME == 'jenkins-pr1') {
       stage('apply') {
-        node("config_node") {
+        steps {
           withCredentials([[
             $class: 'AmazonWebServicesCredentialsBinding',
             credentialsId: aws_creds,
@@ -58,7 +63,7 @@ pipeline {
         }
       }
       stage('status') {
-        node("config_node") {
+        steps {
           withCredentials([[
             $class: 'AmazonWebServicesCredentialsBinding',
             credentialsId: aws_creds,
