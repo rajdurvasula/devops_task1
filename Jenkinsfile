@@ -51,7 +51,7 @@ pipeline {
     }
     stage("deploy") {
       when {
-        expression { ${env.BRANCH_NAME} == 'jenkins-pr1' }
+        branch 'jenkins-pr1'
       }
       steps {
         withCredentials([[
@@ -66,7 +66,7 @@ pipeline {
     }
     stage('status') {
       when {
-        expression { ${env.BRANCH_NAME} == 'jenkins-pr1' }
+        branch 'jenkins-pr1'
       }
       steps {
         withCredentials([[
