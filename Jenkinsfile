@@ -4,9 +4,7 @@ def ssh_key = 'rd_ssh_key'
 
 pipeline {
 
-  agent {
-    label 'config_node'
-  }
+  agent none
 
   parameters {
     choice choices: ['install_apache', 'test_apache'], description: 'Select a playbook to execute', name: 'playbook_name'
@@ -14,12 +12,18 @@ pipeline {
 
   stages {
     stage("get_code") {
+      agent {
+        label 'config_node'
+      }
       steps {
         cleanWs()
         checkout scm
       }
     }
     stage("initialize") {
+      agent {
+        label 'config_node'
+      }
       steps {
         withCredentials([[
           $class: 'AmazonWebServicesCredentialsBinding',
@@ -32,6 +36,9 @@ pipeline {
       }
     }
     stage("prepare") {
+      agent {
+        label 'config_node'
+      }
       steps {
         withCredentials([sshUserPrivateKey(
           credentialsId: 'rd_ssh_key',
@@ -50,6 +57,9 @@ pipeline {
       }
     }
     stage("deploy") {
+      agent {
+        label 'config_node'
+      }
       when {
         branch 'jenkins-pr1'
       }
@@ -65,6 +75,9 @@ pipeline {
       }
     }
     stage('status') {
+      agent {
+        label 'config_node'
+      }
       when {
         branch 'jenkins-pr1'
       }
