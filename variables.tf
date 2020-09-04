@@ -12,7 +12,7 @@ variable "key_pair_name" {
 }
 
 variable "private_key" {
-  default = "/tform_ws/ibm_aws_squid/ibm-rd-sing-kp2"
+  default = "/home/ec2-user/rd_ssh_key.pem"
 }
 
 variable "my_vpc_id" {
