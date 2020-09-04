@@ -44,6 +44,7 @@ pipeline {
           credentialsId: 'rd_ssh_key',
           keyFileVariable: 'SSH_KEY'
         )]) {
+          sh 'rm -f $HOME/rd_ssh_key.pem'
           sh 'cp "$SSH_KEY" $HOME/rd_ssh_key.pem'
         }
         withCredentials([[
