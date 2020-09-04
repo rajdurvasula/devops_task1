@@ -12,7 +12,7 @@ resource "aws_security_group" "my_sg" {
 
   # Allow Ingress for SSH
   ingress {
-    cidr_blocks = [ "${var.ingressCIDRBlock}" ]
+    cidr_blocks = [ "${var.ingressCIDRBlock}", "172.31.0.0/20", "172.31.16.0/20", "172.31.32.0/20" ]
     from_port = 22
     to_port = 22
     protocol = "tcp"
