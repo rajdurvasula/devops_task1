@@ -9,7 +9,7 @@ pipeline {
   }
 
   parameters {
-    string(Name: playbook_name, defaultValue: 'install_apache', description: 'Which Playbook should I execute ?')
+    string(name: playbook_name, defaultValue: 'install_apache', description: 'Which Playbook should I execute ?')
   }
 
   stages {
@@ -50,7 +50,7 @@ pipeline {
       }
     }
     stage("deploy") {
-      step {
+      steps {
         if (env.BRANCH_NAME == 'jenkins-pr1') {
           stage('apply') {
             steps {
