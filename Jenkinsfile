@@ -11,7 +11,7 @@ pipeline {
   parameters {
     choice choices: ['install_apache', 'test_apache'], description: 'Select a playbook to execute', name: 'playbook_name'
   }
-  
+
   stages {
     stage("get_code") {
       steps {
@@ -33,10 +33,10 @@ pipeline {
     }
     stage("prepare") {
       steps {
-        withCredentials([[
+        withCredentials([sshUserPrivateKey(
           credentialsId: 'rd_ssh_key',
           keyFileVariable: 'SSH_KEY'
-        ]]) {
+        )]) {
           sh 'cp "$SSH_KEY" $HOME/rd_ssh_key.pem'
         }
         withCredentials([[
