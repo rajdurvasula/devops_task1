@@ -50,8 +50,10 @@ pipeline {
       }
     }
     stage("deploy") {
+      when {
+        expression ${env.BRANCH_NAME} == 'jenkins-pr1' {
+      }
       steps {
-        if (env.BRANCH_NAME == 'jenkins-pr1') {
           stage('apply') {
             steps {
               withCredentials([[
@@ -64,18 +66,21 @@ pipeline {
               }
             }
           }
-          stage('status') {
-            steps {
-              withCredentials([[
-                $class: 'AmazonWebServicesCredentialsBinding',
-                credentialsId: aws_creds,
-                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-              ]]) {
-                sh 'terraform show'
-              }
-            }
-          }
+        }
+      }
+    }
+    stage('status') {
+      when {
+        expression ${env.BRANCH_NAME} == 'jenkins-pr1' {
+      }
+      steps {
+        withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: aws_creds,
+          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+          sh 'terraform show'
         }
       }
     }
