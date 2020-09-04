@@ -51,27 +51,22 @@ pipeline {
     }
     stage("deploy") {
       when {
-        expression ${env.BRANCH_NAME} == 'jenkins-pr1' {
+        expression { ${env.BRANCH_NAME} == 'jenkins-pr1' }
       }
       steps {
-          stage('apply') {
-            steps {
-              withCredentials([[
-                $class: 'AmazonWebServicesCredentialsBinding',
-                credentialsId: aws_creds,
-                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-              ]]) {
-                sh 'terraform apply -auto-approve'
-              }
-            }
-          }
+        withCredentials([[
+          $class: 'AmazonWebServicesCredentialsBinding',
+          credentialsId: aws_creds,
+          accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+          secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+        ]]) {
+          sh 'terraform apply -auto-approve'
         }
       }
     }
     stage('status') {
       when {
-        expression ${env.BRANCH_NAME} == 'jenkins-pr1' {
+        expression { ${env.BRANCH_NAME} == 'jenkins-pr1' }
       }
       steps {
         withCredentials([[
