@@ -49,28 +49,32 @@ pipeline {
         }
       }
     }
-    if (env.BRANCH_NAME == 'jenkins-pr1') {
-      stage('apply') {
-        steps {
-          withCredentials([[
-            $class: 'AmazonWebServicesCredentialsBinding',
-            credentialsId: aws_creds,
-            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-          ]]) {
-            sh 'terraform apply -auto-approve'
+    stage("deploy") {
+      step {
+        if (env.BRANCH_NAME == 'jenkins-pr1') {
+          stage('apply') {
+            steps {
+              withCredentials([[
+                $class: 'AmazonWebServicesCredentialsBinding',
+                credentialsId: aws_creds,
+                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+              ]]) {
+                sh 'terraform apply -auto-approve'
+              }
+            }
           }
-        }
-      }
-      stage('status') {
-        steps {
-          withCredentials([[
-            $class: 'AmazonWebServicesCredentialsBinding',
-            credentialsId: aws_creds,
-            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-          ]]) {
-            sh 'terraform show'
+          stage('status') {
+            steps {
+              withCredentials([[
+                $class: 'AmazonWebServicesCredentialsBinding',
+                credentialsId: aws_creds,
+                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+              ]]) {
+                sh 'terraform show'
+              }
+            }
           }
         }
       }
