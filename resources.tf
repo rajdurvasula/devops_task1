@@ -42,7 +42,7 @@ resource "aws_instance" "rhel8_client" {
     connection {
       type = "ssh"
       user = var.ansible_user
-      host = "${aws_instance.rhel8_client[count.index].public_ip}"
+      host = "${aws_instance.rhel8_client[count.index].private_ip}"
       private_key = "${file(var.private_key)}"
     }
   }
@@ -61,7 +61,7 @@ resource "aws_instance" "rhel8_client" {
     sleep 30;
     >test_client.ini;
       echo "[test_client]" | tee -a test_client.ini;
-      echo "${aws_instance.rhel8_client[count.index].public_ip} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=${var.private_key}" | tee -a test_client.ini;
+      echo "${aws_instance.rhel8_client[count.index].private_ip} ansible_user=${var.ansible_user} ansible_ssh_private_key_file=${var.private_key}" | tee -a test_client.ini;
     ansible-playbook -i test_client.ini playbooks/install_apache.yml
     EOT
   }
